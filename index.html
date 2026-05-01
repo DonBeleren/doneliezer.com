@@ -216,6 +216,19 @@
       padding: 2rem 2rem 2rem 2.5rem;
       position: relative;
       overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .patent-link {
+      display: block;
+    }
+
+    .patent-link:hover .patent-card {
+      transform: translateX(4px);
+    }
+
+    .patent-link:hover .patent-meta {
+      color: var(--accent);
     }
 
     .patent-card::before {
@@ -476,6 +489,7 @@
         <nav>
           <ul>
             <li><a href="#work">Work</a></li>
+            <li><a href="/patent.html">Patent</a></li>
             <li><a href="#stack">Stack</a></li>
             <li><a href="#contact">Contact</a></li>
           </ul>
@@ -500,11 +514,13 @@
 
       <section id="patent">
         <div class="section-label">Patent</div>
-        <div class="patent-card">
-          <div class="patent-no">U.S. Patent No. 11,676,328</div>
-          <div class="patent-title">Systems and Methods for Prioritized Rendering and Streaming</div>
-          <div class="patent-meta">Granted June 13, 2023</div>
-        </div>
+        <a href="/patent.html" class="patent-link">
+          <div class="patent-card">
+            <div class="patent-no">U.S. Patent No. 11,676,328</div>
+            <div class="patent-title">Systems and Methods for Prioritized Rendering and Streaming</div>
+            <div class="patent-meta">Granted June 13, 2023 &nbsp;·&nbsp; Read the explainer →</div>
+          </div>
+        </a>
       </section>
 
       <section id="work">
