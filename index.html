@@ -283,6 +283,32 @@
       transition: background 0.2s ease;
     }
 
+    .work-item-link {
+      display: block;
+    }
+
+    .work-item-link .work-item {
+      transition: transform 0.2s ease;
+    }
+
+    .work-item-link:hover .work-item {
+      transform: translateX(4px);
+    }
+
+    .work-item-link:hover .case-arrow {
+      transform: translateX(2px);
+      opacity: 1;
+    }
+
+    .case-arrow {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 0.85em;
+      margin-left: 0.4em;
+      opacity: 0.6;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
     .work-item:first-child {
       padding-top: 0;
     }
@@ -549,16 +575,18 @@
             </div>
           </div>
 
-          <div class="work-item">
-            <div class="work-year">2020 — 22</div>
-            <div>
-              <div class="work-role">Co-Founder &amp; iOS Developer</div>
-              <div class="work-co">PeronaFi <span class="place">— Hawaii</span></div>
-              <p class="work-desc">
-                Founding engineer on a social trading platform for stocks, crypto, and options. Owned core architecture and feature delivery from early concept through production release, shaping UI and UX decisions alongside the design team.
-              </p>
+          <a href="/personafi.html" class="work-item-link">
+            <div class="work-item">
+              <div class="work-year">2020 — 22</div>
+              <div>
+                <div class="work-role">Co-Founder &amp; iOS Developer <span class="case-arrow">→</span></div>
+                <div class="work-co">PersonaFi <span class="place">— Hawaii</span></div>
+                <p class="work-desc">
+                  Founding engineer on a social trading platform for stocks, crypto, and options that grew to 80,000 users. Owned core architecture and feature delivery from early concept through nine versioned releases.
+                </p>
+              </div>
             </div>
-          </div>
+          </a>
 
         </div>
       </section>
