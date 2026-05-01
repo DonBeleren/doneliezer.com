@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DonEli Baize — Senior iOS Engineer</title>
+  <meta name="description" content="Senior iOS Engineer specializing in Swift, Metal, and high-performance mobile systems. U.S. Patent holder in prioritized rendering and streaming.">
+  <meta name="author" content="DonEli Baize">
+
+  <meta property="og:title" content="DonEli Baize — Senior iOS Engineer">
+  <meta property="og:description" content="Building high-performance iOS platforms that bridge Swift, Metal, and low-level graphics.">
+  <meta property="og:type" content="website">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:        #FBFAF7;
+      --surface:   #F4F2EC;
+      --text:      #1A1A18;
+      --muted:     #6E6B66;
+      --faint:     #A09C95;
+      --line:      #E5E2DA;
+      --accent:    #B85432;
+      --accent-bg: #F4E5DC;
+
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body:    'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+      --max:    760px;
+      --gutter: clamp(1.25rem, 5vw, 2.5rem);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:        #121110;
+        --surface:   #1C1B19;
+        --text:      #F2EFE9;
+        --muted:     #9E9A92;
+        --faint:     #6B6862;
+        --line:      #2A2926;
+        --accent:    #E07F5C;
+        --accent-bg: #2A1D16;
+      }
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      font-weight: 400;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease, opacity 0.2s ease;
+    }
+
+    a:hover {
+      color: var(--accent);
+    }
+
+    .container {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+
+    /* ---------- Header ---------- */
+
+    header {
+      padding: 2rem 0 1.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .brand {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+
+    .brand::before {
+      content: "—— ";
+      color: var(--faint);
+    }
+
+    nav ul {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+    }
+
+    nav a {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    /* ---------- Hero ---------- */
+
+    .hero {
+      padding: 5rem 0 4rem;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .eyebrow::before {
+      content: "";
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+      display: inline-block;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(2.5rem, 7vw, 4.25rem);
+      line-height: 1.05;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.75rem;
+      font-variation-settings: "opsz" 144, "SOFT" 50;
+    }
+
+    .tagline {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(1.125rem, 2.2vw, 1.375rem);
+      line-height: 1.5;
+      color: var(--muted);
+      max-width: 38ch;
+      margin-bottom: 2.5rem;
+    }
+
+    .tagline em {
+      color: var(--text);
+      font-style: italic;
+    }
+
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--faint);
+    }
+
+    .meta .dot {
+      color: var(--faint);
+    }
+
+    /* ---------- Section ---------- */
+
+    section {
+      padding: 4rem 0;
+      border-top: 1px solid var(--line);
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 2rem;
+    }
+
+    /* ---------- Patent ---------- */
+
+    .patent-card {
+      background: var(--accent-bg);
+      border-radius: 4px;
+      padding: 2rem 2rem 2rem 2.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .patent-link {
+      display: block;
+    }
+
+    .patent-link:hover .patent-card {
+      transform: translateX(4px);
+    }
+
+    .patent-link:hover .patent-meta {
+      color: var(--accent);
+    }
+
+    .patent-card::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 4px;
+      background: var(--accent);
+    }
+
+    .patent-no {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .patent-title {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.005em;
+    }
+
+    .patent-meta {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+
+    /* ---------- Work ---------- */
+
+    .work-list {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .work-item {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 1.5rem;
+      padding: 1.75rem 0;
+      border-bottom: 1px solid var(--line);
+      transition: background 0.2s ease;
+    }
+
+    .work-item-link {
+      display: block;
+    }
+
+    .work-item-link .work-item {
+      transition: transform 0.2s ease;
+    }
+
+    .work-item-link:hover .work-item {
+      transform: translateX(4px);
+    }
+
+    .work-item-link:hover .case-arrow {
+      transform: translateX(2px);
+      opacity: 1;
+    }
+
+    .case-arrow {
+      display: inline-block;
+      color: var(--accent);
+      font-size: 0.85em;
+      margin-left: 0.4em;
+      opacity: 0.6;
+      transition: transform 0.2s ease, opacity 0.2s ease;
+    }
+
+    .work-item:first-child {
+      padding-top: 0;
+    }
+
+    .work-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .work-year {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--faint);
+      padding-top: 0.4rem;
+    }
+
+    .work-role {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 1.125rem;
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: 0.25rem;
+      letter-spacing: -0.005em;
+    }
+
+    .work-co {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 0.75rem;
+    }
+
+    .work-co .place {
+      color: var(--faint);
+    }
+
+    .work-desc {
+      font-size: 14.5px;
+      line-height: 1.65;
+      color: var(--muted);
+      max-width: 56ch;
+    }
+
+    /* ---------- Stack ---------- */
+
+    .stack-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 2rem 2.5rem;
+    }
+
+    .stack-cat {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+
+    .stack-list {
+      font-size: 14.5px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    /* ---------- Studies ---------- */
+
+    .study-link {
+      display: block;
+    }
+
+    .study-card {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 1.5rem;
+      align-items: center;
+      padding: 1.25rem;
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      transition: transform 0.2s ease, border-color 0.2s ease;
+    }
+
+    .study-link:hover .study-card {
+      transform: translateX(4px);
+      border-color: var(--accent);
+    }
+
+    .study-link:hover .case-arrow {
+      transform: translateX(2px);
+      opacity: 1;
+    }
+
+    .study-img {
+      overflow: hidden;
+      border-radius: 3px;
+      aspect-ratio: 16 / 9;
+      background: var(--surface);
+    }
+
+    .study-img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .study-eyebrow {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 0.5rem;
+    }
+
+    .study-title {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: 1.125rem;
+      line-height: 1.3;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+      letter-spacing: -0.005em;
+    }
+
+    .study-desc {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 56ch;
+    }
+
+    @media (max-width: 600px) {
+      .study-card {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+      }
+      .study-img {
+        max-width: 100%;
+      }
+    }
+
+    /* ---------- Background ---------- */
+
+    .background-grid {
+      display: grid;
+      grid-template-columns: 100px 1fr;
+      gap: 1.5rem;
+      padding: 1.25rem 0;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .background-grid:last-child {
+      border-bottom: none;
+    }
+
+    .bg-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--faint);
+      padding-top: 0.2rem;
+    }
+
+    .bg-content {
+      font-size: 14.5px;
+      line-height: 1.7;
+      color: var(--text);
+    }
+
+    .bg-content .sub {
+      color: var(--muted);
+      font-size: 13.5px;
+      display: block;
+      margin-top: 0.15rem;
+    }
+
+    /* ---------- Footer ---------- */
+
+    footer {
+      padding: 4rem 0 3rem;
+      border-top: 1px solid var(--line);
+    }
+
+    .footer-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+    }
+
+    .footer-cta {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-style: italic;
+      font-size: 1.125rem;
+      color: var(--muted);
+    }
+
+    .footer-cta a {
+      color: var(--text);
+      border-bottom: 1px solid var(--line);
+      padding-bottom: 2px;
+      transition: border-color 0.2s ease;
+    }
+
+    .footer-cta a:hover {
+      border-bottom-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .socials {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .socials a {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .colophon {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--faint);
+      letter-spacing: 0.04em;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    /* ---------- Mobile ---------- */
+
+    @media (max-width: 600px) {
+      .hero {
+        padding: 3.5rem 0 3rem;
+      }
+
+      section {
+        padding: 3rem 0;
+      }
+
+      .work-item, .background-grid {
+        grid-template-columns: 1fr;
+        gap: 0.5rem;
+      }
+
+      .work-year, .bg-label {
+        padding-top: 0;
+      }
+
+      .patent-card {
+        padding: 1.5rem 1.5rem 1.5rem 2rem;
+      }
+
+      nav ul {
+        gap: 1.25rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <header>
+      <div class="header-inner">
+        <div class="brand">DonEli Baize</div>
+        <nav>
+          <ul>
+            <li><a href="#work">Work</a></li>
+            <li><a href="/patent.html">Patent</a></li>
+            <li><a href="#stack">Stack</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="hero" id="top">
+        <div class="eyebrow">Senior iOS Engineer</div>
+        <h1>DonEli Baize</h1>
+        <p class="tagline">
+          I build high-performance iOS platforms that bridge <em>Swift</em>, <em>Metal</em>, and low-level graphics &mdash; shipping production systems for real-time rendering and large-scale data streaming.
+        </p>
+        <div class="meta">
+          <span>Lehi, UT</span>
+          <span class="dot">·</span>
+          <span>Open to senior roles</span>
+        </div>
+      </section>
+
+      <section id="patent">
+        <div class="section-label">Patent</div>
+        <a href="/patent.html" class="patent-link">
+          <div class="patent-card">
+            <div class="patent-no">U.S. Patent No. 11,676,328</div>
+            <div class="patent-title">Systems and Methods for Prioritized Rendering and Streaming</div>
+            <div class="patent-meta">Granted June 13, 2023 &nbsp;·&nbsp; Read the explainer →</div>
+          </div>
+        </a>
+      </section>
+
+      <section id="work">
+        <div class="section-label">Selected work</div>
+        <div class="work-list">
+
+          <div class="work-item">
+            <div class="work-year">2024 —</div>
+            <div>
+              <div class="work-role">Lead iOS Engineer</div>
+              <div class="work-co">Monliz, Inc. <span class="place">— Los Angeles</span></div>
+              <p class="work-desc">
+                Technical owner of an iOS platform powering sensor-driven automotive workflows across California. Architected a modular networking layer that streamlined REST integrations and accelerated feature delivery, with frontend service abstractions that improved maintainability and reduced coupling.
+              </p>
+            </div>
+          </div>
+
+          <div class="work-item">
+            <div class="work-year">2022 — 24</div>
+            <div>
+              <div class="work-role">Senior iOS / macOS / Graphics Engineer</div>
+              <div class="work-co">Miris <span class="place">— Los Angeles</span></div>
+              <p class="work-desc">
+                Bridged a C++ Metal engine into a SwiftUI product for spatial film streaming, improving rendering performance for high-bandwidth workloads. Built a Swift SDK from the ground up for gRPC streaming of large datasets, designed for reuse across client applications and future platform extensions.
+              </p>
+            </div>
+          </div>
+
+          <a href="/personafi.html" class="work-item-link">
+            <div class="work-item">
+              <div class="work-year">2020 — 22</div>
+              <div>
+                <div class="work-role">Co-Founder &amp; iOS Developer <span class="case-arrow">→</span></div>
+                <div class="work-co">PersonaFi <span class="place">— Hawaii</span></div>
+                <p class="work-desc">
+                  Founding engineer on a social trading platform for stocks, crypto, and options that grew to 80,000 users. Owned core architecture and feature delivery from early concept through nine versioned releases.
+                </p>
+              </div>
+            </div>
+          </a>
+
+        </div>
+      </section>
+
+      <section id="stack">
+        <div class="section-label">Stack</div>
+        <div class="stack-grid">
+          <div>
+            <div class="stack-cat">Languages</div>
+            <div class="stack-list">Swift, Objective-C, C++, C#, Python</div>
+          </div>
+          <div>
+            <div class="stack-cat">UI</div>
+            <div class="stack-list">SwiftUI, UIKit, CoreAnimation, CoreGraphics</div>
+          </div>
+          <div>
+            <div class="stack-cat">Graphics</div>
+            <div class="stack-list">Metal, OpenGL, shader pass diagnostics, engine optimization</div>
+          </div>
+          <div>
+            <div class="stack-cat">Apple frameworks</div>
+            <div class="stack-list">ARKit, CoreML, Combine, CoreBluetooth, NearbyInteractions</div>
+          </div>
+          <div>
+            <div class="stack-cat">Architecture</div>
+            <div class="stack-list">SDK design, MVVM, MVC, build pipeline engineering</div>
+          </div>
+          <div>
+            <div class="stack-cat">Networking &amp; backend</div>
+            <div class="stack-list">REST, gRPC, Alamofire, AWS Amplify, Firebase</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="studies">
+        <div class="section-label">Selected studies</div>
+        <a href="/asteroid.html" class="study-link">
+          <div class="study-card">
+            <div class="study-img">
+              <img src="/images/asteroid/frame-116.png" alt="Volume-rendered visualization of an asteroid impact plume" loading="lazy">
+            </div>
+            <div class="study-content">
+              <div class="study-eyebrow">Graduate course project · Purdue · CS 530</div>
+              <div class="study-title">Asteroid Plunge <span class="case-arrow">→</span></div>
+              <p class="study-desc">A volume-rendered visualization of a 250m asteroid striking water, built from a 132 GB scientific dataset using VTK.</p>
+            </div>
+          </div>
+        </a>
+      </section>
+
+      <section id="background">
+        <div class="section-label">Background</div>
+
+        <div class="background-grid">
+          <div class="bg-label">Education</div>
+          <div class="bg-content">
+            Ph.D. studies in Computer Graphics and Data Visualization &mdash; Purdue University
+            <span class="sub">Lynn Fellowship recipient</span>
+          </div>
+        </div>
+
+        <div class="background-grid">
+          <div class="bg-label"></div>
+          <div class="bg-content">
+            B.S. Applied Mathematics &mdash; Brigham Young University, Hawaii
+            <span class="sub">GPA 3.98 · Phi Beta Kappa · Minors in Web Development &amp; Visual Arts</span>
+          </div>
+        </div>
+
+        <div class="background-grid">
+          <div class="bg-label">Publication</div>
+          <div class="bg-content">
+            Olmstead, R., Baize, D. &mdash; <em>Probabilities Involving Standard Trirectangular Tetrahedral Dice Rolls</em>
+            <span class="sub">Rose-Hulman Undergraduate Mathematics Journal, Vol. 19, Issue 1</span>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+    <footer id="contact">
+      <div class="footer-inner">
+        <div class="footer-cta">
+          The best way to reach me is by <a href="mailto:doneliezerbaize@gmail.com">email</a>.
+        </div>
+        <ul class="socials">
+          <li><a href="mailto:doneliezerbaize@gmail.com">Email</a></li>
+          <li><a href="https://linkedin.com/in/doneliezer-baize/" target="_blank" rel="noopener">LinkedIn</a></li>
+        </ul>
+      </div>
+      <div class="colophon">
+        <span>© 2026 DonEli Baize</span>
+        <span>Designed &amp; built by hand</span>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>
