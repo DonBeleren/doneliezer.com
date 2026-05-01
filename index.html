@@ -378,6 +378,12 @@
 
     /* ---------- Studies ---------- */
 
+    .case-studies-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+    }
+
     .study-link {
       display: block;
     }
@@ -652,18 +658,16 @@
             </div>
           </div>
 
-          <a href="/personafi.html" class="work-item-link">
-            <div class="work-item">
-              <div class="work-year">2020 — 22</div>
-              <div>
-                <div class="work-role">Co-Founder &amp; iOS Developer <span class="case-arrow">→</span></div>
-                <div class="work-co">PersonaFi <span class="place">— Hawaii</span></div>
-                <p class="work-desc">
-                  Founding engineer on a social trading platform for stocks, crypto, and options that grew to 80,000 users. Owned core architecture and feature delivery from early concept through nine versioned releases.
-                </p>
-              </div>
+          <div class="work-item">
+            <div class="work-year">2020 — 22</div>
+            <div>
+              <div class="work-role">Co-Founder &amp; iOS Developer</div>
+              <div class="work-co">PersonaFi <span class="place">— Hawaii</span></div>
+              <p class="work-desc">
+                Founding engineer on a social trading platform for stocks, crypto, and options that grew to 80,000 users. Owned core architecture and feature delivery from early concept through nine versioned releases.
+              </p>
             </div>
-          </a>
+          </div>
 
         </div>
       </section>
@@ -698,20 +702,37 @@
         </div>
       </section>
 
-      <section id="studies">
-        <div class="section-label">Selected studies</div>
-        <a href="/asteroid.html" class="study-link">
-          <div class="study-card">
-            <div class="study-img">
-              <img src="/images/asteroid/frame-116.png" alt="Volume-rendered visualization of an asteroid impact plume" loading="lazy">
+      <section id="case-studies">
+        <div class="section-label">Case studies</div>
+        <div class="case-studies-grid">
+
+          <a href="/personafi.html" class="study-link">
+            <div class="study-card">
+              <div class="study-img">
+                <img src="/images/personafi/marketing.png" alt="PersonaFi marketing image showing three iPhones with the social feed, portfolio, and brokerage linking screens" loading="lazy">
+              </div>
+              <div class="study-content">
+                <div class="study-eyebrow">Co-Founder &amp; founding iOS engineer · 2020 — 2022</div>
+                <div class="study-title">PersonaFi <span class="case-arrow">→</span></div>
+                <p class="study-desc">A social trading platform for retail investors. Co-founded in Hawaii, scaled to 80,000 users across 16 months and 9 versioned releases.</p>
+              </div>
             </div>
-            <div class="study-content">
-              <div class="study-eyebrow">Graduate course project · Purdue · CS 530</div>
-              <div class="study-title">Asteroid Plunge <span class="case-arrow">→</span></div>
-              <p class="study-desc">A volume-rendered visualization of a 250m asteroid striking water, built from a 132 GB scientific dataset using VTK.</p>
+          </a>
+
+          <a href="/asteroid.html" class="study-link">
+            <div class="study-card">
+              <div class="study-img">
+                <img src="/images/asteroid/frame-116.png" alt="Volume-rendered visualization of an asteroid impact plume" loading="lazy">
+              </div>
+              <div class="study-content">
+                <div class="study-eyebrow">Graduate course project · Purdue · CS 530</div>
+                <div class="study-title">Asteroid Plunge <span class="case-arrow">→</span></div>
+                <p class="study-desc">A volume-rendered visualization of a 250m asteroid striking water, built from a 132 GB scientific dataset using VTK.</p>
+              </div>
             </div>
-          </div>
-        </a>
+          </a>
+
+        </div>
       </section>
 
       <section id="background">
