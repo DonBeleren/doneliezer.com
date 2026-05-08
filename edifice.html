@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Edifice — DonEli Baize</title>
+  <meta name="description" content="A shape-grammar engine for procedurally generating 3D buildings, with a custom DSL, Flex/Bison parser, live in-editor reparse, and an OpenGL 4.1 viewer.">
+  <meta name="author" content="DonEli Baize">
+
+  <link rel="canonical" href="https://doneliezer.com/edifice.html">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+
+  <meta property="og:title" content="Edifice — DonEli Baize">
+  <meta property="og:description" content="A shape-grammar engine for procedurally generating 3D buildings, with a custom DSL, Flex/Bison parser, live in-editor reparse, and an OpenGL 4.1 viewer.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://doneliezer.com/edifice.html">
+  <meta property="og:image" content="https://doneliezer.com/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://doneliezer.com/og-image.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300..600&family=Manrope:wght@400;500;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg:        #FBFAF7;
+      --surface:   #F4F2EC;
+      --text:      #1A1A18;
+      --muted:     #6E6B66;
+      --faint:     #A09C95;
+      --line:      #E5E2DA;
+      --accent:    #B85432;
+      --accent-bg: #F4E5DC;
+
+      --font-display: 'Fraunces', Georgia, serif;
+      --font-body:    'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+
+      --max:    760px;
+      --gutter: clamp(1.25rem, 5vw, 2.5rem);
+    }
+
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg:        #121110;
+        --surface:   #1C1B19;
+        --text:      #F2EFE9;
+        --muted:     #9E9A92;
+        --faint:     #6B6862;
+        --line:      #2A2926;
+        --accent:    #E07F5C;
+        --accent-bg: #2A1D16;
+      }
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+    }
+
+    a { color: inherit; text-decoration: none; transition: color 0.2s ease; }
+    a:hover { color: var(--accent); }
+
+    .container {
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 0 var(--gutter);
+    }
+
+    /* Header */
+    header {
+      padding: 2rem 0 1.5rem;
+      border-bottom: 1px solid var(--line);
+    }
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .brand {
+      font-family: var(--font-mono);
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+    }
+    .brand::before { content: "—— "; color: var(--faint); }
+    nav ul {
+      display: flex;
+      gap: 1.75rem;
+      list-style: none;
+    }
+    nav a {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    nav a.active { color: var(--accent); }
+
+    /* Hero */
+    .hero {
+      padding: 4rem 0 2.5rem;
+    }
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+    .eyebrow::before {
+      content: "";
+      width: 24px;
+      height: 1px;
+      background: var(--accent);
+    }
+    h1.case-h1 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      font-size: clamp(2.5rem, 7vw, 4rem);
+      line-height: 1.05;
+      letter-spacing: -0.025em;
+      margin-bottom: 1.5rem;
+      font-variation-settings: "opsz" 144;
+    }
+    .lead {
+      font-family: var(--font-display);
+      font-weight: 300;
+      font-style: italic;
+      font-size: clamp(1.05rem, 2vw, 1.25rem);
+      line-height: 1.6;
+      color: var(--muted);
+      max-width: 42ch;
+      margin-bottom: 2rem;
+    }
+    .meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.04em;
+      color: var(--faint);
+    }
+
+    /* Hero image */
+    .hero-img {
+      margin: 0 0 4rem 0;
+    }
+    .hero-img img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      display: block;
+    }
+
+    /* Body sections */
+    section.body {
+      padding: 3rem 0;
+      border-top: 1px solid var(--line);
+    }
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 1.75rem;
+    }
+    h2.s {
+      font-family: var(--font-display);
+      font-weight: 500;
+      font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+      line-height: 1.3;
+      margin-bottom: 1.25rem;
+      letter-spacing: -0.005em;
+    }
+    p.prose {
+      font-size: 15.5px;
+      line-height: 1.75;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+      max-width: 62ch;
+    }
+    p.prose:last-child { margin-bottom: 0; }
+    p.prose .term {
+      font-family: var(--font-mono);
+      font-size: 13.5px;
+      background: var(--accent-bg);
+      color: var(--accent);
+      padding: 1px 6px;
+      border-radius: 2px;
+      letter-spacing: 0.01em;
+    }
+
+    /* Frame sequence */
+    .sequence {
+      margin: 1.5rem 0;
+    }
+    .frame {
+      margin-bottom: 2.5rem;
+      counter-increment: frame;
+    }
+    .frame:last-child { margin-bottom: 0; }
+    .frame img {
+      width: 100%;
+      height: auto;
+      border-radius: 4px;
+      border: 1px solid var(--line);
+      display: block;
+      margin-bottom: 0.75rem;
+    }
+    .frame-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .frame-num {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      text-transform: uppercase;
+    }
+    .frame-caption {
+      font-family: var(--font-display);
+      font-style: italic;
+      font-weight: 300;
+      font-size: 14.5px;
+      color: var(--muted);
+      max-width: 50ch;
+      flex: 1;
+      text-align: right;
+    }
+
+    /* Capabilities list */
+    .caps {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1rem 2rem;
+      margin: 1rem 0 0.5rem;
+      list-style: none;
+    }
+    .caps li {
+      font-size: 14.5px;
+      line-height: 1.7;
+      color: var(--text);
+      padding-left: 1.25rem;
+      position: relative;
+    }
+    .caps li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      top: 4px;
+    }
+
+    /* Footer */
+    footer {
+      padding: 3rem 0 3rem;
+      border-top: 1px solid var(--line);
+      margin-top: 3rem;
+    }
+    .footer-back {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .footer-back::before {
+      content: "←";
+      transition: transform 0.2s ease;
+    }
+    .footer-back:hover::before { transform: translateX(-3px); }
+    .colophon {
+      margin-top: 3rem;
+      padding-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--faint);
+      letter-spacing: 0.04em;
+    }
+
+    /* Mobile */
+    @media (max-width: 600px) {
+      .hero { padding: 2.5rem 0 1.5rem; }
+      .hero-img { margin-bottom: 2.5rem; }
+      section.body { padding: 2.5rem 0; }
+      nav ul { gap: 1rem; }
+      .frame-caption { text-align: left; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <header>
+      <div class="header-inner">
+        <a href="/" class="brand">DonEli Baize</a>
+        <nav>
+          <ul>
+            <li><a href="/#work">Work</a></li>
+            <li><a href="/#case-studies" class="active">Cases</a></li>
+            <li><a href="/patent.html">Patent</a></li>
+            <li><a href="/#contact">Contact</a></li>
+          </ul>
+        </nav>
+      </div>
+    </header>
+
+    <main>
+
+      <section class="hero">
+        <div class="eyebrow">Personal project · OpenGL + Qt 5</div>
+        <h1 class="case-h1">Edifice</h1>
+        <p class="lead">
+          A shape-grammar engine for procedurally generating 3D buildings, with a custom DSL, a Flex/Bison parser, and a live in-editor reparse.
+        </p>
+        <div class="meta">
+          <span>C++ · Qt 5 · OpenGL 4.1</span>
+          <span>·</span>
+          <span>2024 — 2025</span>
+          <span>·</span>
+          <span>Windows</span>
+        </div>
+      </section>
+
+      <figure class="hero-img">
+        <img src="/images/edifice/skyline.gif" alt="Animated demo of Edifice generating two rows of city towers along a street, rendered in real time from a split-grammar script.">
+      </figure>
+
+      <section class="body">
+        <div class="section-label">The idea</div>
+        <h2 class="s">Buildings, written as grammars.</h2>
+        <p class="prose">
+          You write rules saying how a face breaks down &mdash; floors, then rooms, then window strips &mdash; and the engine derives the geometry from that. Edifice implements a <span class="term">split grammar</span>, a subset of shape grammars in the Wonka 2003 / CGA-shape tradition: the central operator is <span class="term">split(axis, pcts) { ChildRule* }</span>, which carves a face along an axis at explicit per-cut percentages and dispatches a named rule for each piece. Pieces inherit the parent shape, so rules compose recursively.
+        </p>
+        <p class="prose">
+          Three primitive types: <span class="term">box</span> for cubes, <span class="term">gable</span> for pitched roofs (5 faces, ridge along Z), and <span class="term">hip</span> for 4-sided pyramid roofs along the longer footprint axis. Roof faces are colorable and texturable but not splittable &mdash; their triangular ends would degenerate.
+        </p>
+      </section>
+
+      <section class="body">
+        <div class="section-label">How it works</div>
+        <h2 class="s">From text source to rendered geometry.</h2>
+        <p class="prose">
+          The pipeline runs end-to-end inside the app. A <span class="term">Flex</span> lexer and <span class="term">Bison</span> parser (regenerated on every build) compile DSL source to an AST in <span class="term">Ast.h</span>. A tree-walking interpreter executes the AST, maintaining a rule registry and an implicit "current shape" stack, and lowering grammar features down to the <span class="term">Building::*</span> primitive layer. The geometry that comes out drives a Qt 5 viewport on an OpenGL 4.1 core profile context with 4&times; MSAA, an orbit camera, and frame-locked WASD pan.
+        </p>
+        <p class="prose">
+          The CodeEditor dock re-parses and re-renders as you type. Auto-render is debounced at 900 ms, with an immediate render on cursor-line-change or Enter. Sit on a broken line for 2.5 s and a non-modal red banner explains the syntax error without interrupting the edit. AST diff plus checkpointed snapshots make incremental edits cheap.
+        </p>
+      </section>
+
+      <section class="body">
+        <div class="section-label">In motion</div>
+        <h2 class="s">Three demo scenes.</h2>
+
+        <div class="sequence">
+
+          <figure class="frame">
+            <img src="/images/edifice/skyline.gif" alt="Skyline scene: two rows of five city towers along a street with sidewalks, lamp posts, and lane markings." loading="lazy">
+            <div class="frame-meta">
+              <span class="frame-num">skyline.txt</span>
+              <span class="frame-caption">Two rows of five city towers along a street with sidewalks, lamp posts, and lane markings. The auto-loaded scene at app start.</span>
+            </div>
+          </figure>
+
+          <figure class="frame">
+            <img src="/images/edifice/citycenter.gif" alt="City center scene: tiered central skyscraper with cantilevered balconies, ringed by four corner towers on a raised plaza." loading="lazy">
+            <div class="frame-meta">
+              <span class="frame-num">cityCenter.txt</span>
+              <span class="frame-caption">Tiered central skyscraper with cantilevered balconies, ringed by four corner towers on a raised plaza.</span>
+            </div>
+          </figure>
+
+          <figure class="frame">
+            <img src="/images/edifice/sears_textured.gif" alt="Sears Tower scene: 9-block bundled-tube geometry rendered through the texture pipeline rather than the windowed-strip grammar." loading="lazy">
+            <div class="frame-meta">
+              <span class="frame-num">searsTower_textured.txt</span>
+              <span class="frame-caption">9-block bundled-tube geometry rendered through the texture pipeline rather than the windowed-strip grammar.</span>
+            </div>
+          </figure>
+
+        </div>
+      </section>
+
+      <section class="body">
+        <div class="section-label">What I built</div>
+        <h2 class="s">The pieces underneath.</h2>
+        <ul class="caps">
+          <li>Custom DSL with Flex/Bison parser</li>
+          <li>Tree-walking interpreter with rule registry &amp; shape stack</li>
+          <li>Live in-editor reparse, debounced at 900 ms</li>
+          <li>3D viewer: Qt 5, OpenGL 4.1 core, 4&times; MSAA, orbit camera</li>
+          <li>Procedural texture catalog on a <span class="term">GL_TEXTURE_2D_ARRAY</span></li>
+          <li>Wavefront OBJ export with per-vertex color extension</li>
+          <li>Loading panel with chunked GPU upload progress</li>
+          <li>Three primitive types: box, gable, hip</li>
+          <li>Bundled scripts library: skyline, city center, Sears, houses</li>
+        </ul>
+      </section>
+
+      <section class="body">
+        <div class="section-label">Stack</div>
+        <p class="prose">
+          C++, Qt 5, OpenGL 4.1, Flex/Bison, GLM, stb_image. Visual Studio on Windows, with <span class="term">win_flex</span> and <span class="term">win_bison</span> vendored at <span class="term">tools/winflexbison/</span> so the parser regenerates on every build with no separate install.
+        </p>
+      </section>
+
+      <section class="body">
+        <div class="section-label">Acknowledgments</div>
+        <p class="prose">
+          Edifice grew out of an earlier 3D building project I worked on with <strong>Zachariah Menzie</strong>. About 14% of the code &mdash; mostly the block-geometry core in <span class="term">Building.{cpp,hpp}</span> and <span class="term">BuildingBlock.{cpp,h}</span> &mdash; is Zach's original authorship, and everything Edifice does still rests on top of it. The DSL, the interpreter, the shape-grammar layer, the live editor, the texture pipeline, the orbit camera, and the procedural texture and script tooling were all written for this rewrite.
+        </p>
+        <p class="prose">
+          Thank you, Zach. You were a great partner on the original, and Edifice doesn't exist without the work we did together.
+        </p>
+      </section>
+
+    </main>
+
+    <footer>
+      <a href="/" class="footer-back">Back to portfolio</a>
+      <div class="colophon">
+        © 2026 DonEli Baize · Designed &amp; built by hand
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+</html>
